@@ -18,6 +18,29 @@ deploy:
   bucket_name: "elasticbeanstalk-ap-southeast-2-469277685266"
   bucket_path: "EBApptest"
   on:
-    branch: main
+    branch: sudo: required
+language: node_js
+node_js:
+  - 16
+
+services:
+  - docker
+before_install:
+  - docker build -t yuwangjr/sample-app -f Dockerfile.dev .
+script:
+  - docker run -e CI=true yuwangjr/sample-app npm run test -- --coverage --watchAll=false
+
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-southeast-2"
+  app: "sample-docker-react"
+  env: "Sampledockerreact-env" ### Your EB App environment name
+  bucket_name: "elasticbeanstalk-ap-southeast-2-469277685266"
+  bucket_path: "EBApptest"
+  on:
+    branch: owenzzm-patch-1
+  access_key_id: "AKIAW2QZBGYJKJWUO5UQ"
+  secret_access_key: "QzZ+xWgVeipoATIG87y9YyzGBFI6gPsvUY51Z8yVY"
+
   access_key_id: "AKIAW2QZBGYJKJWUO5UQ"
   secret_access_key: "QzZ+xWgVeipoATIG87y9YyzGBFI6gPsvUY51Z8yVY"
